@@ -1,5 +1,7 @@
+import ceasarCipherException.MyFileEmpty;
 import ceasarCipherException.MyFileNotFoundException;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -11,16 +13,7 @@ import java.util.*;
 public class Cipher {
     public static final List<Character> ALPHABET = getAlphabet(32);
 
-    public static Path getPath(Scanner scanner) {
-        Path pathToFile = null;
-        if (scanner.hasNextLine()) {
-            pathToFile = Path.of(scanner.nextLine());
-            if (!Files.exists(pathToFile)) {
-                scanner.next();
-            }
-        }
-        return pathToFile;
-    }
+
 
     public static String cipherString2(List<Character> alphabet, String str, int key) {
         StringBuilder result = new StringBuilder();
@@ -67,21 +60,6 @@ public class Cipher {
         return listAlphabet;
     }
 
-    public static String loadFromFile(Path path) {
-        if (path == null || !Files.exists(path)) {
-            throw new MyFileNotFoundException("Ошибка, файл не существует!");
-        }
-        String text;
-        try (FileChannel channel = FileChannel.open(path)) {
-            ByteBuffer buffer = ByteBuffer.allocate((int) channel.size());
-            channel.read(buffer);
-            buffer.flip();
-            text = new String(buffer.array(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new MyFileNotFoundException("По указанному пути " + "\"" + path.toString() + "\"" + " файл не был найден");
-        }
-        return text;
-    }
 
     public static Map<Integer, String> allCipherWords(String str) {
         Map<Integer, String> result = new HashMap<>();
