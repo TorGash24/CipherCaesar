@@ -1,7 +1,6 @@
-import ceasarCipherException.CharValidException;
-import ceasarCipherException.MyFileEmpty;
-import ceasarCipherException.MyFileNotFoundException;
+import ceasarCipherException.BusinessException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -11,18 +10,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+import static java.util.Arrays.asList;
+
 public class CipherUtils {
     private static final List<Character> SYMBOLS = List.of('.', ',', '!', '?', '"', ':', '-', ' ');
-    private static final List<Character> VOWELS = List.of('а', 'е', 'ё', 'и', 'й', 'о', 'у', 'ы', 'ю', 'я');
+    private static final Set<Character> VOWELS = new HashSet<>(asList('а', 'е', 'ё', 'и', 'й', 'о', 'у', 'ы', 'ю', 'я'));
 
-    private static int coincidence(String text, String subString) {
-        int count = 0;
-        int indexDot = text.indexOf(subString);
-        while (indexDot != -1) {
-            count += 5;
-            indexDot = text.indexOf(subString, indexDot + 1);
+    private static int findSubstringInText(String text, String subString) {
+        int pointsCount = 0;
+        int indexSubstring = text.indexOf(subString);
+        while (indexSubstring != -1) {
+            pointsCount += 5;
+            indexSubstring = text.indexOf(subString, indexSubstring + 1);
         }
-        return count;
+        return pointsCount;
     }
 
     private static int isNeverCoincidence(String str) {
@@ -41,7 +42,7 @@ public class CipherUtils {
     }
 
     private static Path createNewPath(Path oldPath, int keyCipher) {
-        int beginIndex = oldPath.toString().indexOf("\\");
+        int beginIndex = oldPath.toString().indexOf(File.separator);
         int endIndex = oldPath.toString().indexOf(".", beginIndex);
         String nameFile = oldPath.toString().substring(beginIndex, endIndex);
 
@@ -77,7 +78,7 @@ public class CipherUtils {
         for (int i = 0; i < array.length; i++) {
             char symbol = array[i];
             if (!(symbol >= 1040 && symbol <= 1103 || SYMBOLS.contains(symbol))) {
-                throw new CharValidException("Недопустимый символ для кодировки " + "\"" + symbol + "\"," + " позиция символа: " + i);
+                throw new BusinessException.CharValidException(String.format("Недопустимый символ для кодировки \"%s\", позиция символа: %d", symbol, i));
             }
         }
 
@@ -107,10 +108,10 @@ public class CipherUtils {
             buffer.flip();
             text = new String(buffer.array(), StandardCharsets.UTF_8);
             if (text.length() == 0) {
-                throw new MyFileEmpty("Загруженный файл не имеет текста для шифрования или для расшифровки!");
+                throw new BusinessException.MyFileEmpty("Загруженный файл не имеет текста для шифрования или для расшифровки!");
             }
         } catch (IOException e) {
-            throw new MyFileNotFoundException("По указанному пути " + "\"" + path.toString() + "\"" + " файл не был найден");
+            throw new BusinessException.MyFileNotFoundException("По указанному пути " + "\"" + path + "\"" + " файл не был найден");
         }
         return text;
     }
@@ -154,7 +155,7 @@ public class CipherUtils {
 
             String rot = allRot.get(i);
             for (int j = 0; j < rot.length() - 1; j++) {
-                Character c = rot.charAt(j);
+                char c = rot.charAt(j);
                 if (Character.isSpaceChar(c)) {
                     count++;
                 }
@@ -163,11 +164,11 @@ public class CipherUtils {
                 }
             }
 
-            count += coincidence(rot, ". ");
-            count += coincidence(rot, ", ");
-            count += coincidence(rot, "? ");
-            count += coincidence(rot, "! ");
-            count += coincidence(rot, " - ");
+            count += findSubstringInText(rot, ". ");
+            count += findSubstringInText(rot, ", ");
+            count += findSubstringInText(rot, "? ");
+            count += findSubstringInText(rot, "! ");
+            count += findSubstringInText(rot, " - ");
 
             count -= isNeverCoincidence(rot);
 
