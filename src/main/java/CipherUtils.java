@@ -45,7 +45,7 @@ public class CipherUtils {
         int endIndex = oldPath.toString().indexOf(".", beginIndex);
         String nameFile = oldPath.toString().substring(beginIndex, endIndex);
 
-        return Path.of(oldPath.toString().replace(nameFile, nameFile + "_key_" + keyCipher +"_cipheredText"));
+        return Path.of(oldPath.toString().replace(nameFile, nameFile + "_key_" + keyCipher + "_cipheredText"));
     }
 
     private static char replacementSymbolAndWord(char word, int key) {
