@@ -4,8 +4,6 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 public class MainApp {
-    //D:\\MyFile_in.txt
-    //D:\\MyFile_in_key_8_cipherText.txt
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Укажите путь к файлу:");
