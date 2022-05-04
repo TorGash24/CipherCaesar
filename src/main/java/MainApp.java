@@ -8,18 +8,18 @@ public class MainApp {
     //D:\\MyFile_in_key_8_cipherText.txt
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Укажите путь к файлу:");
+        System.out.println("РЈРєР°Р¶РёС‚Рµ РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ:");
         Path path = CipherUtils.getPath(scanner);
         while (!Files.exists(path)) {
-            System.out.println("По указанному пути файл не был найден, повторите попытку снова!");
+            System.out.println("РџРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РїСѓС‚Рё С„Р°Р№Р» РЅРµ Р±С‹Р» РЅР°Р№РґРµРЅ, РїРѕРІС‚РѕСЂРёС‚Рµ РїРѕРїС‹С‚РєСѓ СЃРЅРѕРІР°!");
             path = CipherUtils.getPath(scanner);
         }
         String textFromFile = CipherUtils.getTextFromFile(path);
 
-        System.out.println("[A шифрование] [J расшифровка] [B расшифровка Brute force], пожалуйста, выберите один!");
+        System.out.println("[A С€РёС„СЂРѕРІР°РЅРёРµ] [J СЂР°СЃС€РёС„СЂРѕРІРєР°] [B СЂР°СЃС€РёС„СЂРѕРІРєР° Brute force], РїРѕР¶Р°Р»СѓР№СЃС‚Р°, РІС‹Р±РµСЂРёС‚Рµ РѕРґРёРЅ!");
         String question = scanner.nextLine().toUpperCase();
         while (!("A".equals(question) || "J".equals(question) || "B".equals(question))) {
-            System.out.println("Такой операции нет! Повторите попытку!");
+            System.out.println("РўР°РєРѕР№ РѕРїРµСЂР°С†РёРё РЅРµС‚! РџРѕРІС‚РѕСЂРёС‚Рµ РїРѕРїС‹С‚РєСѓ!");
             question = scanner.nextLine().toUpperCase();
         }
 
@@ -34,7 +34,7 @@ public class MainApp {
         } else {
             String textBruteForce = CipherUtils.getBruteforce(textFromFile);
             if (textBruteForce.length() == 0) {
-                System.out.println("Не удолось расшифровать, измените текст!");
+                System.out.println("РќРµ СѓРґРѕР»РѕСЃСЊ СЂР°СЃС€РёС„СЂРѕРІР°С‚СЊ, РёР·РјРµРЅРёС‚Рµ С‚РµРєСЃС‚!");
             } else {
                 System.out.println(textBruteForce);
             }

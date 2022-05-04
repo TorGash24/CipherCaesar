@@ -13,7 +13,7 @@ import java.util.*;
 
 public class CipherUtils {
     private static final List<Character> SYMBOLS = List.of('.', ',', '!', '?', '"', ':', '-', ' ');
-    private static final List<Character> VOWELS = List.of('а', 'е', 'ё', 'и', 'й', 'о', 'у', 'ы', 'ю', 'я');
+    private static final List<Character> VOWELS = List.of('Р°', 'Рµ', 'С‘', 'Рё', 'Р№', 'Рѕ', 'Сѓ', 'С‹', 'СЋ', 'СЏ');
 
     private static int coincidence(String text, String subString) {
         int count = 0;
@@ -51,20 +51,20 @@ public class CipherUtils {
     private static char replacementSymbolAndWord(char word, int key) {
         final int ALPHABET_SIZE = 32;
 
-        if (word >= 'А' && word <= 'Я') {
+        if (word >= 'Рђ' && word <= 'РЇ') {
             word += key % ALPHABET_SIZE;
-            if (word < 'А') {
+            if (word < 'Рђ') {
                 word += ALPHABET_SIZE;
             }
-            if (word > 'Я') {
+            if (word > 'РЇ') {
                 word -= ALPHABET_SIZE;
             }
-        } else if (word >= 'а' && word <= 'я') {
+        } else if (word >= 'Р°' && word <= 'СЏ') {
             word += key % ALPHABET_SIZE;
-            if (word < 'а') {
+            if (word < 'Р°') {
                 word += ALPHABET_SIZE;
             }
-            if (word > 'я') {
+            if (word > 'СЏ') {
                 word -= ALPHABET_SIZE;
             }
         } else {
@@ -77,7 +77,7 @@ public class CipherUtils {
         for (int i = 0; i < array.length; i++) {
             char symbol = array[i];
             if (!(symbol >= 1040 && symbol <= 1103 || SYMBOLS.contains(symbol))) {
-                throw new CharValidException("Недопустимый символ для кодировки " + "\"" + symbol + "\"," + " позиция символа: " + i);
+                throw new CharValidException("РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ СЃРёРјРІРѕР» РґР»СЏ РєРѕРґРёСЂРѕРІРєРё " + "\"" + symbol + "\"," + " РїРѕР·РёС†РёСЏ СЃРёРјРІРѕР»Р°: " + i);
             }
         }
 
@@ -107,21 +107,21 @@ public class CipherUtils {
             buffer.flip();
             text = new String(buffer.array(), StandardCharsets.UTF_8);
             if (text.length() == 0) {
-                throw new MyFileEmpty("Загруженный файл не имеет текста для шифрования или для расшифровки!");
+                throw new MyFileEmpty("Р—Р°РіСЂСѓР¶РµРЅРЅС‹Р№ С„Р°Р№Р» РЅРµ РёРјРµРµС‚ С‚РµРєСЃС‚Р° РґР»СЏ С€РёС„СЂРѕРІР°РЅРёСЏ РёР»Рё РґР»СЏ СЂР°СЃС€РёС„СЂРѕРІРєРё!");
             }
         } catch (IOException e) {
-            throw new MyFileNotFoundException("По указанному пути " + "\"" + path.toString() + "\"" + " файл не был найден");
+            throw new MyFileNotFoundException("РџРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РїСѓС‚Рё " + "\"" + path.toString() + "\"" + " С„Р°Р№Р» РЅРµ Р±С‹Р» РЅР°Р№РґРµРЅ");
         }
         return text;
     }
 
     public static int getKey(Scanner scanner) {
-        System.out.println("Укажите ключ:");
+        System.out.println("РЈРєР°Р¶РёС‚Рµ РєР»СЋС‡:");
         int key = 0;
         if (scanner.hasNextInt()) {
             key = Integer.parseInt(scanner.nextLine());
             while (key < 0) {
-                System.out.println("Ключ не может быть отрицательным!");
+                System.out.println("РљР»СЋС‡ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Рј!");
                 key = Integer.parseInt(scanner.nextLine());
             }
         }
