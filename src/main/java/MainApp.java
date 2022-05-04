@@ -4,18 +4,17 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 public class MainApp {
-    //D:\\MyFile_in_key_8_cipherText.txt
+    //D:\\MyFile_in.txt
     //D:\\MyFile_in_key_8_cipherText.txt
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Укажите путь к файлу:");
-        Path path = Cipher.getPath(scanner);
+        Path path = CipherUtils.getPath(scanner);
         while (!Files.exists(path)) {
             System.out.println("По указанному пути файл не был найден, повторите попытку снова!");
-            path = Cipher.getPath(scanner);
+            path = CipherUtils.getPath(scanner);
         }
-        String textFromFile = Cipher.getTextFromFile(path);
-
+        String textFromFile = CipherUtils.getTextFromFile(path);
 
         System.out.println("[A шифрование] [J расшифровка] [B расшифровка Brute force], пожалуйста, выберите один!");
         String question = scanner.nextLine().toUpperCase();
@@ -25,15 +24,15 @@ public class MainApp {
         }
 
         if ("A".equals(question)) {
-            int keyCipher = Cipher.getKey(scanner);
-            String cipherText = Cipher.codingText(textFromFile, keyCipher);
-            Cipher.recordingInFile(path, cipherText, keyCipher);
+            int keyCipher = CipherUtils.getKey(scanner);
+            String cipheredText = CipherUtils.codingText(textFromFile, keyCipher);
+            CipherUtils.recordingInFile(path, cipheredText, keyCipher);
         } else if ("J".equals(question)) {
-            int keyCipher = Cipher.getKey(scanner);
-            String unCipherText = Cipher.unCodingText(textFromFile, keyCipher);
+            int keyCipher = CipherUtils.getKey(scanner);
+            String unCipherText = CipherUtils.unCodingText(textFromFile, keyCipher);
             System.out.println(unCipherText);
         } else {
-            String textBruteForce = Cipher.getBruteforce(textFromFile);
+            String textBruteForce = CipherUtils.getBruteforce(textFromFile);
             if (textBruteForce.length() == 0) {
                 System.out.println("Не удолось расшифровать, измените текст!");
             } else {

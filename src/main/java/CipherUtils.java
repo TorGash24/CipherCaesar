@@ -2,7 +2,6 @@ import ceasarCipherException.CharValidException;
 import ceasarCipherException.MyFileEmpty;
 import ceasarCipherException.MyFileNotFoundException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -12,7 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public class Cipher {
+public class CipherUtils {
     private static final List<Character> SYMBOLS = List.of('.', ',', '!', '?', '"', ':', '-', ' ');
     private static final List<Character> VOWELS = List.of('à', 'å', '¸', 'è', 'é', 'î', 'ó', 'û', 'þ', 'ÿ');
 
@@ -24,14 +23,6 @@ public class Cipher {
             indexDot = text.indexOf(subString, indexDot + 1);
         }
         return count;
-    }
-
-    private static Path changePath(Path oldPath, int keyCipher) {
-        int beginIndex = oldPath.toString().indexOf("\\");
-        int endIndex = oldPath.toString().indexOf(".", beginIndex);
-        String nameFile = oldPath.toString().substring(beginIndex, endIndex);
-
-        return Path.of(oldPath.toString().replace(nameFile, nameFile + "_key_" + keyCipher +"_cipherText"));
     }
 
     private static int isNeverCoincidence(String str) {
@@ -49,7 +40,15 @@ public class Cipher {
         return count;
     }
 
-    private static char replacementSymbolAndChar(char word, int key) {
+    private static Path createNewPath(Path oldPath, int keyCipher) {
+        int beginIndex = oldPath.toString().indexOf("\\");
+        int endIndex = oldPath.toString().indexOf(".", beginIndex);
+        String nameFile = oldPath.toString().substring(beginIndex, endIndex);
+
+        return Path.of(oldPath.toString().replace(nameFile, nameFile + "_key_" + keyCipher +"_cipheredText"));
+    }
+
+    private static char replacementSymbolAndWord(char word, int key) {
         final int ALPHABET_SIZE = 32;
 
         if (word >= 'À' && word <= 'ß') {
@@ -127,7 +126,7 @@ public class Cipher {
             }
         }
 
-        return key;
+        return key % 32;
     }
 
     public static String codingText(String text, int key) {
@@ -135,7 +134,7 @@ public class Cipher {
         if (isCheckValidChar(charArray)) {
             for (int i = 0; i < charArray.length; i++) {
                 char c = charArray[i];
-                charArray[i] = replacementSymbolAndChar(c, key);
+                charArray[i] = replacementSymbolAndWord(c, key);
             }
         }
         return new String(charArray);
@@ -147,7 +146,7 @@ public class Cipher {
     }
 
     public static String getBruteforce(String textFromFile) {
-        Map<Integer, String> allRot = Cipher.getAllRot(textFromFile);
+        Map<Integer, String> allRot = CipherUtils.getAllRot(textFromFile);
         StringBuilder resultString = new StringBuilder();
         int max = 0;
         for (int i = 0; i < allRot.size(); i++) {
@@ -183,7 +182,7 @@ public class Cipher {
     }
 
     public static void recordingInFile(Path oldPath, String textForRecording, int keyCipher) {
-        Path newPath = changePath(oldPath, keyCipher);
+        Path newPath = createNewPath(oldPath, keyCipher);
 
         try (RandomAccessFile raf = new RandomAccessFile(String.valueOf(Files.createFile(newPath)), "rw");
              FileChannel out = raf.getChannel()) {
