@@ -1,6 +1,5 @@
 import ceasarCipherException.BusinessException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -42,11 +41,21 @@ public class CipherUtils {
     }
 
     private static Path createNewPath(Path oldPath, int keyCipher) {
-        int beginIndex = oldPath.toString().indexOf(File.separator);
-        int endIndex = oldPath.toString().indexOf(".", beginIndex);
-        String nameFile = oldPath.toString().substring(beginIndex, endIndex);
+        int count = 0;
+        int endIndex = oldPath.toString().lastIndexOf(".");
+        String nameFile = oldPath.toString().substring(0, endIndex);
 
-        return Path.of(oldPath.toString().replace(nameFile, nameFile + "_key_" + keyCipher + "_cipheredText"));
+        String fileExtension = oldPath.toString().substring(endIndex);
+        String tempPath = nameFile + "__key_" + keyCipher + "_cipheredText" + fileExtension;
+        while (Files.exists(Path.of(tempPath))) {
+            tempPath = reName(oldPath.toString(), fileExtension, ++count, keyCipher);
+        }
+
+        return Path.of(tempPath);
+    }
+
+    public static String reName(String path, String extension, int count, int key) {
+        return path.substring(0, path.lastIndexOf(".")) + "__key_" + key +"_cipheredText (" + count + ")" + extension;
     }
 
     private static char replacementSymbolAndWord(char word, int key) {
@@ -98,6 +107,10 @@ public class CipherUtils {
 
     public static Path getPath(Scanner scanner) {
         return Path.of(scanner.nextLine());
+    }
+
+    public static Path getPath(String ConsoleInput) {
+        return Path.of(ConsoleInput);
     }
 
     public static String getTextFromFile(Path path) {

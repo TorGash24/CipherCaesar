@@ -25,6 +25,7 @@ public class MainApp {
             int keyCipher = CipherUtils.getKey(scanner);
             String cipheredText = CipherUtils.codingText(textFromFile, keyCipher);
             CipherUtils.recordingInFile(path, cipheredText, keyCipher);
+            System.out.println("Шифрование успешно завершено!");
         } else if ("J".equals(question)) {
             int keyCipher = CipherUtils.getKey(scanner);
             String unCipherText = CipherUtils.unCodingText(textFromFile, keyCipher);
