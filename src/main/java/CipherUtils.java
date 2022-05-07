@@ -55,7 +55,7 @@ public class CipherUtils {
     }
 
     public static String reName(String path, String extension, int count, int key) {
-        return path.substring(0, path.lastIndexOf(".")) + "__key_" + key +"_cipheredText (" + count + ")" + extension;
+        return path.substring(0, path.lastIndexOf(".")) + "__key_" + key + "_cipheredText (" + count + ")" + extension;
     }
 
     private static char replacementSymbolAndWord(char word, int key) {

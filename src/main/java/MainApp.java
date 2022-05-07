@@ -36,6 +36,7 @@ public class MainApp {
                 System.out.println("Не удолось расшифровать, измените текст!");
             } else {
                 System.out.println(textBruteForce);
+                System.out.println("Расшифровка успешно завершена!");
             }
         }
     }
